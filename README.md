@@ -29,3 +29,12 @@ EnumTakeItemActionType.CRAFT = "Enum_set_value" -- Error: Enum is read-only
 ```lua
 local val = EnumTakeItemActionType.TEST -- Error: Invalid enum key: TEST
 ```
+
+### Создание перечислений
+
+```lua
+Global( "EnumSortOrder", EnumFactory:create( {
+	ASC = true,
+	DESC = false,
+} ) )
+```
