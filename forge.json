@@ -1,0 +1,15 @@
+{
+    "name": "Enum",
+    "type": "Library",
+    "execute": {
+        "unpack": [
+            "src/EnumFactory.lua",
+            "src/Definitions/TakeItemActionType.lua"
+        ]
+    },
+    "files": {
+        "/Mods/SampleCommon/CoreScripts/ClassesImplementation.lua": 100,
+		"src/EnumFactory.lua": 20,
+        "src/Definitions/TakeItemActionType.lua": 19
+    }
+}
