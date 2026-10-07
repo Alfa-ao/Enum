@@ -1,51 +1,60 @@
 # Enum
 
-Фабрика для создания перечислений - Enum. Allods Online.
+Фабрика для создания перечислений - Enum. Аллоды Онлайн.
 
-## Установка
+## Подключение
 
-- Скачать архив - `Code` - `Download ZIP`.
-- Поместить содержимое архива `Enum-main.zip\Enum-main\*` в папку `\data\Mods\Addons\_ИмяАддона_\Libs\Enum\`.
-- Отредактировать `AddonDesc.(UIAddon).xdb` дополнив в содержимое атрибута `ScriptFileRefs` скрипты:
-```xml
-<Item href="/Mods/SampleCommon/CoreScripts/ClassesImplementation.lua" /> <!-- CoreScripts OOP -->
-<Item href="Libs/Enum/src/EnumFactory.lua" /> <!-- Фабрика для Enums -->
-<Item href="Libs/Enum/src/Definitions/<___name___>.lua" /> <!-- Пользовательский Enum, нужные файлы для работы -->
+[**ForgePackage**](https://github.com/Alfa-ao/ForgePackage)
+
+```
+require Alfa-ao/Enum
 ```
 
 ## Примеры
 
 ```lua
-log( "ENUM_TakeItemActionType_Money" == EnumTakeItemActionType.MONEY ) -- true
+log( EnumTakeItemActionType.MONEY:Equals( "ENUM_TakeItemActionType_Money" ) ) -- true
 ```
 
 ```lua
 function OnItemTaken( params )
-    if params.actionType == EnumTakeItemActionType.CRAFT then
-		-- params.actionType == "ENUM_TakeItemActionType_Craft" предмет (скрафчен).
-	end
+    if EnumTakeItemActionType.CRAFT:Equals( params.actionType ) then
+        -- params.actionType == "ENUM_TakeItemActionType_Craft" предмет (скрафчен).
+    end
 end
 
 common.RegisterEventHandler( OnItemTaken, "EVENT_AVATAR_ITEM_TAKEN" )
 ```
 
-Попытка присвоить значение:
-
 ```lua
-EnumTakeItemActionType.CRAFT = "Enum_set_value" -- Error: Enum is read-only
-```
+-- Создание стандартного перечисления
+EnumTakeItemActionType = EnumFactory:create {
+    CRAFT = "ENUM_TakeItemActionType_Craft",
+    LOOT  = "ENUM_TakeItemActionType_Loot",
+}
 
-Обращение к неизвестному ключу:
+-- Создание гибридного перечисления из несколько допустимых значений
+EnumStatus = EnumFactory:create {
+    ACTIVE = { "STATUS_ACTIVE", 1 },
+}
 
-```lua
-local val = EnumTakeItemActionType.TEST -- Error: Invalid enum key: TEST
-```
+-- Прямой и обратный доступ к элементам
+local craftObj = EnumTakeItemActionType.CRAFT
+local sameObj  = EnumTakeItemActionType[ "ENUM_TakeItemActionType_Craft" ]
 
-## Создание перечислений
+-- Сравнение с внешними значениями через метод :Equals()
+if EnumTakeItemActionType.CRAFT:Equals( "ENUM_TakeItemActionType_Craft" ) then
+    -- Обработка действия
+end
+if EnumStatus.ACTIVE:Equals( 1 ) then
+    -- Обработка статуса
+end
 
-```lua
-Global( "EnumSortOrder", EnumFactory:create( {
-	ASC = true,
-	DESC = false,
-} ) )
+-- Неявное приведение типов при конкатенации и арифметике
+local logMsg = "Current action: " .. EnumTakeItemActionType.CRAFT
+
+-- Сравнение двух объектов перечисления через оператор ==
+if EnumTakeItemActionType.CRAFT == EnumTakeItemActionType.CRAFT then
+    -- Объекты идентичны
+end
 ```
